@@ -1,0 +1,55 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
+  <div class="container px-2">
+
+    <!-- Mobile navbar -->
+    <button 
+      (click)="slideNavbar()"
+      id="navbar-toggler" 
+      class="navbar-toggler" 
+      type="button" 
+      data-bs-target="#navbarResponsive"
+      aria-controls="navbarResponsive" 
+      aria-expanded="false" 
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <a class="nav-link" href="/">
+          Home
+        </a>
+        <a class="nav-link" href="/users">
+          Usuarios
+        </a>
+        <a *ngIf="storedUser!=null" class="nav-link" href="/chat">
+          Chat
+        </a>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Content-->
+<section>
+  <div class="container p-0">
+    <div class="row gx-4 gx-lg-5">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</section>
+
+<!-- User Panel-->
+<div id="userPanel" class="position-absolute bottom-0 start-0 bg-dark">
+  <h2 *ngIf="storedUser==null">Inicia sesión o registrate !</h2>
+  <h2 *ngIf="storedUser!=null">
+    <mat-icon>account_circle</mat-icon>
+    {{ user.name }} / {{ user.email }}
+  </h2>
+</div>
+
+<!-- Messages Panel-->
+<div id="messagesPanel" class="position-absolute bottom-0 start-0 text-light">
+  <app-chat-private></app-chat-private>
+</div>

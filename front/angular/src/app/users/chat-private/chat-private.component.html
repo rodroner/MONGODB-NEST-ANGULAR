@@ -1,0 +1,54 @@
+<div id="navbarChatPrivate" class="row justify-content-end" (click)="clickInChat($event)">
+  <!-- 
+    Cada chat-private es un websocket que lanzamos cuando hemos clickado en algun usuario conectado.
+    El websocket debe tener la informacion de los dos usuarios.
+
+    Dentro de esta contenedor almacenamos los chats privados que tenga el usuario logueado
+    el contenido viene a traves del método 'createChatPrivate()' del componente users.component.ts
+  -->
+</div>
+
+<div id="divChatPrivate" class="chat position-absolute bottom-0 bg-light">
+  <div class="message-header rowMobile bg-dark text-light">
+    <div class="col-10">
+      <p id="message-header" class="p-2">{{email2}}</p>
+    </div>
+    <div class="col-1">
+      <div class="btn-style rounded text-light p-2">
+        <mat-icon (click)="clickMinimize()">minimize</mat-icon>
+      </div>
+    </div>
+    <div class="col-1">
+      <div class="btn-style rounded text-light p-2">
+        <mat-icon (click)="clickClose()">close</mat-icon>
+      </div>
+    </div>
+  </div>
+  <div id="messages-box" class="messages-box">
+    <div *ngFor="let msg of messages" class="message message-email-{{msg.email1.split('@')[0]}}-{{msg.email2.split('@')[0]}} d-none">
+      <div class="message_outer">
+        <div class="message_inner">
+          <div class="containerMsg">
+            <div class="headerMsg text-dark">
+              <small><strong>{{ msg.email1 }}</strong></small>
+            </div>
+            <div class="txtMsg">
+              {{ msg.message }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="message-input rowMobile">
+    <div class="col-10 p-1">
+      <textarea class="w-100 h-100 rounded" (keydown.enter)="sendMessage()" [(ngModel)]="message"
+        placeholder="Escribe un mensaje..."></textarea>
+    </div>
+    <div class="col-2 p-1">
+      <button class="w-100 h-100 btn-success rounded" (click)="sendMessage()">
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

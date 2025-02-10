@@ -1,0 +1,23 @@
+<h1>Users</h1>
+<div class="col-12 boxStyle">
+  <h2>Usuarios conectados ({{usersConnected.length}})</h2>
+  <ul class="p-0 mt-4">
+    <li *ngFor="let user of usersConnected">
+      <!-- cuando hago doble click, se me abre(crea) el component (chatprivate) -->
+       <div class="user-connected-card" (click)="createChatPrivate(this.storedUser, user.email)">
+        {{ user.email }} / {{ user.name }}
+       </div>
+       <span class="barr"></span>
+
+    </li>
+  </ul>
+
+  <h2>Usuarios desconectados ({{usersDesconnected.length}})</h2>
+  <ul class="p-0 mt-4">
+    <li *ngFor="let user of usersDesconnected">
+      <div class="user-desconnected-card">
+        {{ user.email }} / {{ user.name }}
+      </div>
+    </li>
+  </ul>
+</div>

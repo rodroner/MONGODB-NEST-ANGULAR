@@ -1,0 +1,56 @@
+<h1>Chat</h1>
+
+<div class="boxStyle">
+  <div *ngIf="!isNameSet">
+    <h2>Usuario sin registrar, introduce tu nombre</h2>
+    <input [(ngModel)]="senderName" placeholder="Nombre" />
+    <button (click)="setName()">Establecer nombre</button>
+  </div>
+
+  <div *ngIf="isNameSet">
+    <h2>Bienvenido al chat del servidor, {{ user.email }} / {{ user.name }}</h2>
+
+    <div (click)="userToggle()" class="clients">
+      <small class="text-uppercase">
+        Usuarios en el chat
+        <mat-icon id="userToggleDown">arrow_drop_down</mat-icon>
+        <mat-icon id="userToggleUp" class="d-none">arrow_drop_up</mat-icon>
+      </small>
+      <ul class="userToggle">
+        <li *ngFor="let client of clients">
+          {{ client.name }}
+        </li>
+      </ul>
+    </div>
+
+    <div id="messages-box" class="messages-box">
+      <div *ngFor="let msg of messages" class="message">
+        <div class="message_outer">
+          <div class="message_inner">
+            <div class="containerMsg">
+              <div class="headerMsg text-dark">
+                <small><strong>{{ msg.name }}</strong></small>
+              </div>
+              <div class="txtMsg">
+                {{ msg.message }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="message-input rowMobile">
+      <div class="col-lg-11 col-sm-10 p-1">
+        <textarea class="w-100 rounded" (keydown.enter)="sendMessage()" [(ngModel)]="message"
+          placeholder="Escribe un mensaje..."></textarea> 
+      </div>
+      <div class="col-lg-1 col-sm-2 p-1">
+        <button class="w-100 btn-success rounded" (click)="sendMessage()">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,15 @@
+body{
+  overflow: hidden;
+}
+
+.mat-mdc-tab-body-content.ng-trigger.ng-trigger-translateTab {
+  overflow-x: hidden;
+}
+
+.boxStyle{
+  border-radius: 8px;
+  padding-right: 15px;
+  padding-left: 15px;
+  background: rgb(239,242,254);
+  background: radial-gradient(circle, rgba(239,242,254,1) 0%, rgba(251,255,220,1) 100%);
+}
