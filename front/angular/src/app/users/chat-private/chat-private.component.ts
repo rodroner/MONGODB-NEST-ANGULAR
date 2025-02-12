@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ChatPrivateService } from './services/chat-private.service';
+import { Message } from './models/message.model';
 
 declare var $: any;
 
@@ -27,6 +28,8 @@ declare var $: any;
   Recibir Mensajes: Los mensajes recibidos se agregan a la lista messages y se muestran en el chat.
 */
 
+
+
 export class ChatPrivateComponent {
 
   email1: string = '';
@@ -38,29 +41,55 @@ export class ChatPrivateComponent {
   constructor(
     private chatPrivateService: ChatPrivateService) { }
 
+  //AUDIOS
+  audioGetMessage = new Audio("../../../assets/audio/getmessage.mp3");
+
   // Recibir mensajes
-  ngOnInit() {
+  ngOnInit() { 
     //Conectamos siempre, sin hacer clickInChat()
     this.chatPrivateService.connectOnLoad();
 
     this.chatPrivateService.onMessage().subscribe((msg) => {
-      console.log(msg.email1 + ' Te ha enviado un mensaje !')
+      console.log(msg.email1 + ' Te ha enviado un mensaje !');
       console.log('Mensaje recibido:', msg);
       //Clickar en un usuario conectado y crear div en #navbarChatPrivate
-      this.createChatPrivate(msg.email2, msg.email1)
+      this.createChatPrivate(msg.email2, msg.email1);
       this.messages.push(msg);
-      setTimeout(
-        this.showCorrespondingMessages,
-        250);
+
+      this.getContMessages(msg);
+
+      if ($('#divChatPrivate').hasClass('open')) {
+        setTimeout(
+          this.showCorrespondingMessages,
+          250);
+      }
     });
   }
 
-  clickMinimize(){
-    console.log('clickMinimize()...');
+  //Pintar el numero de mensajes no leídos de un chat
+  getContMessages(msg: Message) {
+    let id = this.mergeEmails(msg.email2, msg.email1);
+    if ($('#divChatPrivate').hasClass('open') && $('#message-header').text() == msg.email1) {
+      $('#' + id).attr('data-cont-messages', '0');
+      $('.' + id + '.data-cont-messages').text('0');
+      $('.' + id + '.data-cont-messages').addClass('d-none');
+    } else {
+      let getContMessages = parseInt($('#' + id).attr('data-cont-messages')) + 1;
+      $('#' + id).attr('data-cont-messages', getContMessages);
+      if ($('#' + id).attr('data-cont-messages') > 0) {
+        console.log('#' + id + ' .data-cont-messages data-cont-messages > 0');
+        $('.' + id + '.data-cont-messages').text(getContMessages);
+        $('.' + id + '.data-cont-messages').removeClass('d-none');
+        this.audioGetMessage.play();
+      }
+    }
+  }
+
+  clickMinimize() {
     $('#divChatPrivate').removeClass('open');
   }
 
-  clickClose(){
+  clickClose() {
     console.log('clickClose()...');
   }
 
@@ -79,6 +108,12 @@ export class ChatPrivateComponent {
             console.log('this.chatPrivateService.connect... ' + this.email1 + " -> " + this.email2);
             this.chatPrivateService.connect(this.email1, this.email2);
             this.showCorrespondingMessages2(this.email2);
+
+            //Ocultar cont messages correspondiente
+            let id = this.mergeEmails(this.email1, this.email2);
+            $('#' + id).attr('data-cont-messages', '0');
+            $('.' + id + '.data-cont-messages').text('0');
+            $('.' + id + '.data-cont-messages').addClass('d-none');
           }
         }
       }
@@ -103,9 +138,10 @@ export class ChatPrivateComponent {
     let idChatPrivate = this.mergeEmails(email1, email2);
     if ($('#' + idChatPrivate).length === 0) {
       $('#navbarChatPrivate').append(
-        '<div id="' + idChatPrivate + '" class="btn chat-private col-auto card p-2" data-email1="' + email1 + '" data-email2="' + email2 + '"  >' +
+        '<div id="' + idChatPrivate + '" class="btn chat-private col-auto card p-2" data-email1="' + email1 + '" data-email2="' + email2 + '" data-cont-messages="0">' +
         email2 +
-        '</div>'
+        '</div>' +
+        '<span class="d-none ' + idChatPrivate + ' data-cont-messages">0</span>'
       );
     }
   }
@@ -122,8 +158,6 @@ export class ChatPrivateComponent {
   igualar #message-header .text() a message-email-{{ msg.email1 }} y a message-email-{{ msg.email2 }}
   */
   showCorrespondingMessages() {
-    console.log('showCorrespondingMessages()');
-
     let email1 = localStorage.getItem('userLoged');
     let email2 = $('#message-header').text();
 
@@ -133,13 +167,12 @@ export class ChatPrivateComponent {
     }
     console.log('... ' + email1 + ', ' + email2);
     $('.message').addClass('d-none');
-    $('.message-email-' + email1+'-'+email2).removeClass('d-none');
-    $('.message-email-' + email2+'-'+email1).addClass('msg-email2-left');
-    $('.message-email-' + email2+'-'+email1).removeClass('d-none');
+    $('.message-email-' + email1 + '-' + email2).removeClass('d-none');
+    $('.message-email-' + email2 + '-' + email1).addClass('msg-email2-left');
+    $('.message-email-' + email2 + '-' + email1).removeClass('d-none');
   }
 
-  showCorrespondingMessages2(email2: string){
-    console.log('showCorrespondingMessages2()');
+  showCorrespondingMessages2(email2: string) {
     let email1 = localStorage.getItem('userLoged');
     if (email1 && email2) {
       email1 = email1.split('@')[0];
@@ -147,8 +180,8 @@ export class ChatPrivateComponent {
     }
     console.log('... ' + email1 + ', ' + email2);
     $('.message').addClass('d-none');
-    $('.message-email-' + email1+'-'+email2).removeClass('d-none');
-    $('.message-email-' + email2+'-'+email1).addClass('msg-email2-left');
-    $('.message-email-' + email2+'-'+email1).removeClass('d-none');
+    $('.message-email-' + email1 + '-' + email2).removeClass('d-none');
+    $('.message-email-' + email2 + '-' + email1).addClass('msg-email2-left');
+    $('.message-email-' + email2 + '-' + email1).removeClass('d-none');
   }
 }

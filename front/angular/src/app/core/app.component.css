@@ -30,10 +30,10 @@
   margin-bottom: 2rem;
   padding: 15px;
   z-index: 1;
-  background: rgb(33, 37, 41);
-  background: linear-gradient(90deg, rgb(33, 37, 41) 50%, transparent 100%);
-  background: -moz-linear-gradient(90deg, rgb(33, 37, 41) 50%, transparent 100%);
-  background: -webkit-linear-gradient(90deg, rgb(33, 37, 41) 50%, transparent 100%);
+  background: rgb(229, 229, 230);
+  background: linear-gradient(90deg, rgb(33, 37, 41) 1%, rgb(229, 229, 230) 50%, transparent 95%);
+  background: -moz-linear-gradient(90deg, rgb(33, 37, 41) 1%, rgb(229, 229, 230) 50%, transparent 95%);
+  background: -webkit-linear-gradient(90deg, rgb(33, 37, 41) 1%, rgb(229, 229, 230) 50%, transparent 95%);
 }
 
 @media (max-width: 1245px) {

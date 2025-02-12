@@ -42,9 +42,10 @@ export class UsersComponent implements OnInit {
     let idChatPrivate = this.mergeEmails(email1, email2);
     if ($('#' + idChatPrivate).length === 0) {
       $('#navbarChatPrivate').append(
-        '<div id="' + idChatPrivate + '" class="chat-private col-auto" data-email1="' + email1 + '" data-email2="' + email2 + '"  >' +
-        email2 + 
-        '</div>'
+        '<div id="' + idChatPrivate + '" class="chat-private col-auto" data-email1="' + email1 + '" data-email2="' + email2 + '" data-cont-messages="0">' +
+        email2 +
+        '</div>' +
+        '<span class="d-none ' + idChatPrivate + ' data-cont-messages">0</span>'
       );
     }
   }

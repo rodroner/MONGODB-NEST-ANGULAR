@@ -16,13 +16,13 @@
     </button>
     <div id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
-        <a class="nav-link" href="/">
+        <a class="nav-link" routerLink="/">
           Home
         </a>
-        <a class="nav-link" href="/users">
+        <a class="nav-link" routerLink="/users">
           Usuarios
         </a>
-        <a *ngIf="storedUser!=null" class="nav-link" href="/chat">
+        <a *ngIf="storedUser!=null" class="nav-link" routerLink="/chat">
           Chat
         </a>
 
