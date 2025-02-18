@@ -4,8 +4,11 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+
 import { ChatPrivateService } from './services/chat-private.service';
+
 import { Message } from './models/message.model';
+import { MessagesPrivateService } from './services/messages-private.service';
 
 declare var $: any;
 
@@ -28,8 +31,6 @@ declare var $: any;
   Recibir Mensajes: Los mensajes recibidos se agregan a la lista messages y se muestran en el chat.
 */
 
-
-
 export class ChatPrivateComponent {
 
   email1: string = '';
@@ -39,13 +40,14 @@ export class ChatPrivateComponent {
   messages: any[] = [];
 
   constructor(
-    private chatPrivateService: ChatPrivateService) { }
+    private chatPrivateService: ChatPrivateService,
+    private messagesPrivateService: MessagesPrivateService) { }
 
   //AUDIOS
   audioGetMessage = new Audio("../../../assets/audio/getmessage.mp3");
-
+  
   // Recibir mensajes
-  ngOnInit() { 
+  ngOnInit() {
     //Conectamos siempre, sin hacer clickInChat()
     this.chatPrivateService.connectOnLoad();
 
@@ -54,13 +56,14 @@ export class ChatPrivateComponent {
       console.log('Mensaje recibido:', msg);
       //Clickar en un usuario conectado y crear div en #navbarChatPrivate
       this.createChatPrivate(msg.email2, msg.email1);
-      this.messages.push(msg);
-
       this.getContMessages(msg);
 
       if ($('#divChatPrivate').hasClass('open')) {
+
+        this.showCorrespondingMessages1(msg.email1);
+
         setTimeout(
-          this.showCorrespondingMessages,
+          this.scrollbarMsn,
           250);
       }
     });
@@ -77,7 +80,6 @@ export class ChatPrivateComponent {
       let getContMessages = parseInt($('#' + id).attr('data-cont-messages')) + 1;
       $('#' + id).attr('data-cont-messages', getContMessages);
       if ($('#' + id).attr('data-cont-messages') > 0) {
-        console.log('#' + id + ' .data-cont-messages data-cont-messages > 0');
         $('.' + id + '.data-cont-messages').text(getContMessages);
         $('.' + id + '.data-cont-messages').removeClass('d-none');
         this.audioGetMessage.play();
@@ -89,15 +91,17 @@ export class ChatPrivateComponent {
     $('#divChatPrivate').removeClass('open');
   }
 
-  clickClose() {
-    console.log('clickClose()...');
+  clickClose(email1Close: string, email2Close: string) {
+    $('#divChatPrivate').removeClass('open');
+    let idChatPrivate = this.mergeEmails(email1Close, email2Close);
+    $('#' + idChatPrivate).remove();
   }
 
   // Al hacer clic en un chat
   clickInChat(event: Event) {
     const target = event.target as HTMLElement;
     if (target.classList.contains('chat-private')) {
-      console.log('clickInChat()...');
+      
       this.email1 = target.getAttribute('data-email1') || '';
       this.email2 = target.getAttribute('data-email2') || '';
       if (this.email1) {
@@ -105,9 +109,9 @@ export class ChatPrivateComponent {
         if (chatBox) {
           chatBox.classList.toggle('open');
           if (chatBox.classList.contains('open')) {
-            console.log('this.chatPrivateService.connect... ' + this.email1 + " -> " + this.email2);
+            
             this.chatPrivateService.connect(this.email1, this.email2);
-            this.showCorrespondingMessages2(this.email2);
+            this.showCorrespondingMessages1(this.email2);
 
             //Ocultar cont messages correspondiente
             let id = this.mergeEmails(this.email1, this.email2);
@@ -118,23 +122,28 @@ export class ChatPrivateComponent {
         }
       }
     }
+    setTimeout(
+      this.scrollbarMsn,
+      250);
   }
 
   // Enviar un mensaje
   sendMessage() {
     if (this.message.trim()) {
       this.chatPrivateService.sendMessage(this.email1, this.email2, this.message);
-      this.messages.push({ email1: this.email1, email2: this.email2, message: this.message });
+      // this.messages.push({ email1: this.email1, email2: this.email2, message: this.message });
       this.message = '';
+      
+      this.showCorrespondingMessages1(this.email2);
+
       setTimeout(
-        this.showCorrespondingMessages,
+        this.scrollbarMsn,
         250);
     }
   }
 
   //Clickar en un usuario conectado y crear div en #navbarChatPrivate
   createChatPrivate(email1: string, email2: string) {
-    //console.log('createChatPrivate: ' + email1 + ' / ' + email2)
     let idChatPrivate = this.mergeEmails(email1, email2);
     if ($('#' + idChatPrivate).length === 0) {
       $('#navbarChatPrivate').append(
@@ -157,31 +166,26 @@ export class ChatPrivateComponent {
   Mostrar solo mensajes de la caja de chat correspondiente al usuario
   igualar #message-header .text() a message-email-{{ msg.email1 }} y a message-email-{{ msg.email2 }}
   */
-  showCorrespondingMessages() {
+  showCorrespondingMessages1(email2: string) {
     let email1 = localStorage.getItem('userLoged');
-    let email2 = $('#message-header').text();
-
     if (email1 && email2) {
-      email1 = email1.split('@')[0];
-      email2 = email2.split('@')[0];
+      this.messagesPrivateService.getMessages(this.email1, email2).subscribe({
+        next: (messages) => {
+          this.messages = messages;
+          console.log('Mensajes obtenidos:', this.messages);
+        },
+        error: (error) => {
+          console.error('Error al obtener los mensajes:', error);
+        }
+      });
     }
-    console.log('... ' + email1 + ', ' + email2);
-    $('.message').addClass('d-none');
-    $('.message-email-' + email1 + '-' + email2).removeClass('d-none');
-    $('.message-email-' + email2 + '-' + email1).addClass('msg-email2-left');
-    $('.message-email-' + email2 + '-' + email1).removeClass('d-none');
   }
 
-  showCorrespondingMessages2(email2: string) {
-    let email1 = localStorage.getItem('userLoged');
-    if (email1 && email2) {
-      email1 = email1.split('@')[0];
-      email2 = email2.split('@')[0];
+  //Llevar scroll abajo en el chat para mostrar el mensaje mas reciente
+  scrollbarMsn() {
+    const element = document.getElementById('messages-box');
+    if (element) {
+      element.scrollTop = 99999999;
     }
-    console.log('... ' + email1 + ', ' + email2);
-    $('.message').addClass('d-none');
-    $('.message-email-' + email1 + '-' + email2).removeClass('d-none');
-    $('.message-email-' + email2 + '-' + email1).addClass('msg-email2-left');
-    $('.message-email-' + email2 + '-' + email1).removeClass('d-none');
   }
 }

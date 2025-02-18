@@ -20,17 +20,20 @@
     </div>
     <div class="col-1">
       <div class="btn-style rounded text-light p-2">
-        <mat-icon (click)="clickClose()">close</mat-icon>
+        <mat-icon (click)="clickClose(email1, email2)">close</mat-icon>
       </div>
     </div>
   </div>
   <div id="messages-box" class="messages-box">
-    <div *ngFor="let msg of messages" class="message message-email-{{msg.email1.split('@')[0]}}-{{msg.email2.split('@')[0]}} d-none">
+    <div *ngFor="let msg of messages"
+      class="message message-email-{{msg.email1.split('@')[0]}}-{{msg.email2.split('@')[0]}}"
+      [ngClass]="{'msg-email2-left': msg.email1 === email2}">
       <div class="message_outer">
         <div class="message_inner">
           <div class="containerMsg">
             <div class="headerMsg text-dark">
               <small><strong>{{ msg.email1 }}</strong></small>
+              <p class="dateMsg">{{ msg.timestamp | date:'dd/MM/yyyy, HH:mm' }}</p>
             </div>
             <div class="txtMsg">
               {{ msg.message }}

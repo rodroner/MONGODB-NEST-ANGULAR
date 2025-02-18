@@ -28,6 +28,8 @@ export class ChatPrivateService {
 
   // Enviar mensaje
   sendMessage(email1: string, email2: string, message: string) {
+    console.log('MENSAJE ENVIADO !');
+    console.log(message);
     this.socket.emit('send-message', { email1, email2, message });
   }
 

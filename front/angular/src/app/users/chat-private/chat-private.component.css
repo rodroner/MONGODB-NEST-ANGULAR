@@ -123,6 +123,16 @@
     flex-direction: row-reverse;
 }
 
+.dateMsg {
+    font-size: 0.75rem;
+    text-align: right;
+    color: rgb(100, 100, 100);
+}
+
+.message.msg-email2-left .dateMsg {
+    text-align: left;
+}
+
 .message.msg-email2-left .headerMsg {
     text-align: left;
 }
