@@ -36,8 +36,6 @@ import { ChatPrivateComponent } from '../users/chat-private/chat-private.compone
     BrowserAnimationsModule,
     MatIconModule,
     ChatPrivateComponent
-
-
   ],
   providers: [
 

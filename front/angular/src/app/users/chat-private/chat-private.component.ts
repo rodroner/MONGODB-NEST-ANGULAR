@@ -32,10 +32,8 @@ declare var $: any;
 */
 
 export class ChatPrivateComponent {
-
   email1: string = '';
   email2: string = '';
-
   message: string = '';
   messages: any[] = [];
 
@@ -45,7 +43,7 @@ export class ChatPrivateComponent {
 
   //AUDIOS
   audioGetMessage = new Audio("../../../assets/audio/getmessage.mp3");
-  
+
   // Recibir mensajes
   ngOnInit() {
     //Conectamos siempre, sin hacer clickInChat()
@@ -57,11 +55,8 @@ export class ChatPrivateComponent {
       //Clickar en un usuario conectado y crear div en #navbarChatPrivate
       this.createChatPrivate(msg.email2, msg.email1);
       this.getContMessages(msg);
-
       if ($('#divChatPrivate').hasClass('open')) {
-
         this.showCorrespondingMessages1(msg.email1);
-
         setTimeout(
           this.scrollbarMsn,
           250);
@@ -101,7 +96,6 @@ export class ChatPrivateComponent {
   clickInChat(event: Event) {
     const target = event.target as HTMLElement;
     if (target.classList.contains('chat-private')) {
-      
       this.email1 = target.getAttribute('data-email1') || '';
       this.email2 = target.getAttribute('data-email2') || '';
       if (this.email1) {
@@ -109,10 +103,8 @@ export class ChatPrivateComponent {
         if (chatBox) {
           chatBox.classList.toggle('open');
           if (chatBox.classList.contains('open')) {
-            
             this.chatPrivateService.connect(this.email1, this.email2);
             this.showCorrespondingMessages1(this.email2);
-
             //Ocultar cont messages correspondiente
             let id = this.mergeEmails(this.email1, this.email2);
             $('#' + id).attr('data-cont-messages', '0');
@@ -133,9 +125,7 @@ export class ChatPrivateComponent {
       this.chatPrivateService.sendMessage(this.email1, this.email2, this.message);
       // this.messages.push({ email1: this.email1, email2: this.email2, message: this.message });
       this.message = '';
-      
       this.showCorrespondingMessages1(this.email2);
-
       setTimeout(
         this.scrollbarMsn,
         250);

@@ -1,0 +1,54 @@
+<h1>Friends</h1>
+<div class="col-12 boxStyle">
+  <mat-form-field class="w-100">
+    <mat-label>Buscar usuario por nombre o email</mat-label>
+    <input 
+      matInput 
+      type="text" 
+      [(ngModel)]="valueInput"
+      (ngModelChange)="onInputChange($event)">
+  </mat-form-field>
+
+  <h2>Resultado ({{userSearch.length}})</h2>
+
+  <ul class="p-0 mt-4">
+    <li *ngFor="let user of userSearch">
+       <div class="user-for-request-card">
+        {{ user.email }} / {{ user.name }}
+        <div class="request-card" style="display: none;">
+          <div class="row">
+            <div class="col-10">
+              Solicitar petición de amistad
+            </div>
+            <div class="col-1">
+              <mat-icon (click)="sendRequest(user)">send</mat-icon>
+            </div>
+            
+          </div>
+        </div>
+       </div>
+       <span class="barr"></span>
+    </li>
+  </ul>
+
+  <h2>Conectados ({{friendsConnected.length}})</h2>
+  <ul class="p-0 mt-4">
+    <li *ngFor="let user of friendsConnected">
+      <!-- cuando hago doble click, se me abre(crea) el component (chatprivate) -->
+       <div class="user-connected-card" (click)="createChatPrivate(this.storedUser, user.email)">
+        {{ user.email }} / {{ user.name }}
+       </div>
+       <span class="barr"></span>
+
+    </li>
+  </ul>
+
+  <h2>Desconectados ({{friendsDesconnected.length}})</h2>
+  <ul class="p-0 mt-4">
+    <li *ngFor="let user of friendsDesconnected">
+      <div class="user-desconnected-card">
+        {{ user.email }} / {{ user.name }}
+      </div>
+    </li>
+  </ul>
+</div>

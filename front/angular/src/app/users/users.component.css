@@ -9,7 +9,7 @@
   list-style: none;
 }
 
-.barr{
+.barr {
   border-bottom: 1px solid #fff;
   display: block;
   margin: 1rem;
@@ -23,12 +23,13 @@
   display: inline;
   cursor: pointer;
 }
+
 .user-connected-card:hover {
   background-color: rgba(0, 0, 0, 0.2);
   transition: 0.5s;
 }
 
-.user-desconnected-card{
+.user-desconnected-card {
   word-wrap: break-word;
   border-radius: .25rem;
   padding: 8px;

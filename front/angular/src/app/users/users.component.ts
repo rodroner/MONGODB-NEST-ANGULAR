@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { User } from '../users/models/user.model';
-//import { UsersService } from './services/users.service';
+import { User } from './models/user.model';
 import { WebSocketUserService } from './services/websocket-user.service';
-import { AppComponent } from '../core/app.component';
 
 declare var $: any;
 
